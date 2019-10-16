@@ -20,6 +20,7 @@ namespace TestNinja.UnitTests
 
 
         [Test]
+//          [Ignore("Because I wanted to!")]
         public void Add_WhenCalled_ReturnTheSumOfArguments()
         {
 
@@ -37,7 +38,7 @@ namespace TestNinja.UnitTests
 
             var result = _math.Max(a, b);
 
-            Assert.That(result, Is.EqualTo(expectedResult)));
+            Assert.That(result, Is.EqualTo(expectedResult));
 
         }
 
