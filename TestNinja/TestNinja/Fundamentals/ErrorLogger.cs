@@ -9,9 +9,12 @@ namespace TestNinja.Fundamentals
 
         public event EventHandler<Guid> ErrorLogged;
 
+        private Guid _errorId;
+
+
         public void Log(string error)
         {
-           if (String.IsNullOrWhiteSpace(error))
+            if (String.IsNullOrWhiteSpace(error))
                 throw new ArgumentNullException();
 
             LastError = error;
@@ -19,7 +22,12 @@ namespace TestNinja.Fundamentals
             // Write the log to a storage
             // ...
 
-//            ErrorLogged?.Invoke(this, Guid.NewGuid());
+            OnErrorLogged(Guid.NewGuid());
+        }
+
+        protected virtual void OnErrorLogged(Guid errorId)
+        {
+            ErrorLogged?.Invoke(this, errorId);
         }
     }
 }
