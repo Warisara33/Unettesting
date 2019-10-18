@@ -21,6 +21,10 @@ namespace TestNinja.Mocking
             return overlappingBooking == null ? string.Empty : overlappingBooking.Reference;
         }
     }
+    public interface IUnitOfWork
+    {
+        IQueryable<T> Query<T>();
+    }
 
     public class UnitOfWork
     {
