@@ -31,7 +31,7 @@ namespace TestNinja.UnitTests.Mocking
             _statementFileName = "fileName";
             _statementGenerator = new Mock<IStatementGenerator>();
             _statementGenerator
-                .Setup(sg => sg.SaveStatement(_houseKeeper.Oid, _houseKeeper.FullName, (_statementGenerator)))
+                .Setup(sg => sg.SaveStatement(_houseKeeper.Oid, _houseKeeper.FullName, (_statementDate)))
                 .Returns(() => _statementFileName);
 
             _emailSender = new Mock<IEmailSender>();
@@ -88,9 +88,6 @@ namespace TestNinja.UnitTests.Mocking
         [Test]
         public void SendStatementEmails_WhenCalled_EmailTheStatement()
         {
-            _statementGenerator
-                .Setup(sg => sg.SaveStatement(_houseKeeper.Oid, _houseKeeper.FullName, (_statementGenerator)))
-                .Returns(_statementGenerator);
 
             _service.SendStatementEmails(_statementDate);
 
@@ -109,7 +106,6 @@ namespace TestNinja.UnitTests.Mocking
         [Test]
         public void SendStatementEmails_StatementFileNameIsEmptyString_ShouldNotEmailTheStatement()
         {
-            _statementGenerator
 
             _statementFileName = "";
 
@@ -126,7 +122,20 @@ namespace TestNinja.UnitTests.Mocking
 
             VerifyEmailNotSent();
         }
+        [Test]
+        public void SendStatementEmails_EmailSendingFails_DisplayAMessageBox()
+        {
+            _emailSender.Setup(es => es.EmailFile(
+                It.IsAny<string>(),
+                It.IsAny<string>(),
+                It.IsAny<string>(),
+                It.IsAny<string>()
+            )).Throws<Exception>();
 
+            _service.SendStatementEmails(_statementDate);
+
+            _messageBox.Verify(mb => mb.Show(It.IsAny<string>(), It.IsAny<string>(), MessageBoxButtons.OK));
+        }
         private void VerifyEmailNotSent()
         {
 
